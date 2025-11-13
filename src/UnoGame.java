@@ -91,31 +91,36 @@ public class UnoGame {
     }
 
     private void initializeDeck() {
+        List<Card> tempDeck = new ArrayList<>();
+
         // Initialize numbered cards (0-9, two of each except 0)
         for (Card.Color color : Card.Color.values()) {
             if (color != Card.Color.WILD) {
                 // Add one zero
-                deck.add(new CardBuilder().setColor(color).setType(Card.Type.NUMBER).setNumber(0).createCard());
+                tempDeck.add(new CardBuilder().setColor(color).setType(Card.Type.NUMBER).setNumber(0).createCard());
                 // Add two copies of 1-9
                 for (int i = 1; i <= 9; i++) {
-                    deck.add(new CardBuilder().setColor(color).setType(Card.Type.NUMBER).setNumber(i).createCard());
-                    deck.add(new CardBuilder().setColor(color).setType(Card.Type.NUMBER).setNumber(i).createCard());
+                    tempDeck.add(new CardBuilder().setColor(color).setType(Card.Type.NUMBER).setNumber(i).createCard());
+                    tempDeck.add(new CardBuilder().setColor(color).setType(Card.Type.NUMBER).setNumber(i).createCard());
                 }
                 // Add action cards: Skip, Reverse, Draw Two (two of each)
-                deck.add(new CardBuilder().setColor(color).setType(Card.Type.SKIP).createCard());
-                deck.add(new CardBuilder().setColor(color).setType(Card.Type.SKIP).createCard());
-                deck.add(new CardBuilder().setColor(color).setType(Card.Type.REVERSE).createCard());
-                deck.add(new CardBuilder().setColor(color).setType(Card.Type.REVERSE).createCard());
-                deck.add(new CardBuilder().setColor(color).setType(Card.Type.DRAW_TWO).createCard());
-                deck.add(new CardBuilder().setColor(color).setType(Card.Type.DRAW_TWO).createCard());
+                tempDeck.add(new CardBuilder().setColor(color).setType(Card.Type.SKIP).createCard());
+                tempDeck.add(new CardBuilder().setColor(color).setType(Card.Type.SKIP).createCard());
+                tempDeck.add(new CardBuilder().setColor(color).setType(Card.Type.REVERSE).createCard());
+                tempDeck.add(new CardBuilder().setColor(color).setType(Card.Type.REVERSE).createCard());
+                tempDeck.add(new CardBuilder().setColor(color).setType(Card.Type.DRAW_TWO).createCard());
+                tempDeck.add(new CardBuilder().setColor(color).setType(Card.Type.DRAW_TWO).createCard());
             }
         }
 
         // Add Wild and Wild Draw Four cards
         for (int i = 0; i < 4; i++) {
-            deck.add(new CardBuilder().setColor(Card.Color.WILD).setType(Card.Type.WILD).createCard());
-            deck.add(new CardBuilder().setColor(Card.Color.WILD).setType(Card.Type.WILD_DRAW_FOUR).createCard());
+            tempDeck.add(new CardBuilder().setColor(Card.Color.WILD).setType(Card.Type.WILD).createCard());
+            tempDeck.add(new CardBuilder().setColor(Card.Color.WILD).setType(Card.Type.WILD_DRAW_FOUR).createCard());
         }
+
+        Collections.shuffle(tempDeck);
+        deck.addAll(tempDeck);
     }
 
     private void reshuffleDiscard() {
