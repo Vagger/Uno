@@ -4,7 +4,7 @@ import java.util.*;
 public class UnoGame {
     private static final Scanner scanner = new Scanner(System.in);
     private final Queue<Card> deck = new LinkedList<>();
-    private final List<Card> discard = new LinkedList<>();
+    private final List<Card> discard = new ArrayList<>();
     private final List<Player> players = new ArrayList<>();
     private int currentPlayerIndex = 0;
 
