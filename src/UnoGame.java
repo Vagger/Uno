@@ -4,6 +4,7 @@ import java.util.*;
 public class UnoGame {
     private static final Scanner scanner = new Scanner(System.in);
     private final Queue<Card> deck = new LinkedList<>();
+    private final List<Card> discard = new LinkedList<>();
     private final List<Player> players = new ArrayList<>();
     private int currentPlayerIndex = 0;
 
@@ -31,6 +32,9 @@ public class UnoGame {
 
         boolean gameOver = false;
         while (!gameOver) {
+            if (deck.isEmpty()) {
+                reshuffleDiscard();
+            }
             Player currentPlayer = players.get(currentPlayerIndex);
             System.out.println("\n" + currentPlayer.getName() + "'s turn.");
             System.out.println("Current card on table: " + currentCard);
@@ -57,6 +61,7 @@ public class UnoGame {
             if (currentPlayer.hasPlayableCard(currentCard)) {
                 Card playedCard = currentPlayer.playCard(currentCard, scanner);
                 if (playedCard != null) {
+                    discard.add(currentCard);
                     currentCard = playedCard;
                 }
             } else {
@@ -77,6 +82,7 @@ public class UnoGame {
         Card firstCard;
         do {
             firstCard = deck.poll();
+            discard.add(firstCard);
             if (firstCard == null) {
                 return null;
             }
@@ -110,5 +116,11 @@ public class UnoGame {
             deck.add(new CardBuilder().setColor(Card.Color.WILD).setType(Card.Type.WILD).createCard());
             deck.add(new CardBuilder().setColor(Card.Color.WILD).setType(Card.Type.WILD_DRAW_FOUR).createCard());
         }
+    }
+
+    private void reshuffleDiscard() {
+        Collections.shuffle(discard);
+        deck.addAll(discard);
+        discard.clear();
     }
 }
