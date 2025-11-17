@@ -7,6 +7,7 @@ public class UnoGame {
     private final List<Card> discard = new ArrayList<>();
     private final List<Player> players = new ArrayList<>();
     private int currentPlayerIndex = 0;
+    private boolean clockwiseOrder = true;
 
     public static void main(String[] args) {
         new UnoGame().start();
@@ -54,8 +55,11 @@ public class UnoGame {
                 continue;
             }
             if (currentCard.isSkip()) {
-                currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+                nextPlayer();
                 continue;
+            }
+            if (currentCard.isReverse()) {
+                clockwiseOrder = !clockwiseOrder;
             }
 
             if (currentPlayer.hasPlayableCard(currentCard)) {
@@ -74,7 +78,16 @@ public class UnoGame {
                 gameOver = true;
             }
 
+            nextPlayer();
             currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+        }
+    }
+
+    public void nextPlayer() {
+        if (clockwiseOrder) {
+            currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+        } else {
+            currentPlayerIndex = (currentPlayerIndex - 1 + players.size()) % players.size();
         }
     }
 

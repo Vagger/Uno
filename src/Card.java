@@ -45,6 +45,10 @@ public class Card {
         return this.type == Type.SKIP;
     }
 
+    public boolean isReverse() {
+        return this.type == Type.REVERSE;
+    }
+
     @Override
     public String toString() {
         if (type == Type.NUMBER) {
