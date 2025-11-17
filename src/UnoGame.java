@@ -60,6 +60,7 @@ public class UnoGame {
             }
             if (currentCard.isReverse()) {
                 clockwiseOrder = !clockwiseOrder;
+                continue;
             }
 
             if (currentPlayer.hasPlayableCard(currentCard)) {
