@@ -16,9 +16,10 @@ public class UnoGame {
     public void start() {
         initializeDeck();
         Collections.shuffle((List<?>) deck);
-        int numPlayers = 2; // For simplicity, 2 players
+        int numPlayers = 3;
+        players.add(new Player("Vahe", false));
         for (int i = 1; i <= numPlayers; i++) {
-            players.add(new Player("Player " + i));
+            players.add(new Player("Bot " + i, true));
         }
 
         // Deal 7 cards to each player
@@ -64,7 +65,12 @@ public class UnoGame {
             }
 
             if (currentPlayer.hasPlayableCard(currentCard)) {
-                Card playedCard = currentPlayer.playCard(currentCard, scanner);
+                Card playedCard;
+                if (!currentPlayer.isBot()) {
+                    playedCard = currentPlayer.playCard(currentCard, scanner);
+                } else {
+                    playedCard = currentPlayer.playRandomCard(currentCard);
+                }
                 if (playedCard != null) {
                     discard.add(currentCard);
                     currentCard = playedCard;

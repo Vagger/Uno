@@ -3,9 +3,11 @@ import java.util.*;
 class Player {
     private final String name;
     private final List<Card> hand = new ArrayList<>();
+    private final boolean isBot;
 
-    public Player(String name) {
+    public Player(String name, boolean isBot) {
         this.name = name;
+        this.isBot = isBot;
     }
 
     public void drawCard(Queue<Card> deck) {
@@ -40,11 +42,36 @@ class Player {
         }
     }
 
+    public Card playRandomCard(Card topCard) {
+        System.out.println(name + "'s turn.");
+        List<Card> playableCards = new ArrayList<>();
+        for (Card card : hand) {
+            if (card.isPlayableOn(topCard)) {
+                playableCards.add(card);
+            }
+        }
+        if (playableCards.isEmpty()) {
+            System.out.println("No playable cards. " + name + " draws a card.");
+            return null;
+        } else {
+            System.out.println("Playable cards: " + playableCards);
+            System.out.print("Choose a card to play (index): ");
+            Random rand = new Random();
+            Card selected = playableCards.get(rand.nextInt(playableCards.size()));
+            hand.remove(selected);
+            return selected;
+        }
+    }
+
     public boolean hasNoCards() {
         return hand.isEmpty();
     }
 
     public String getName() {
         return name;
+    }
+
+    public boolean isBot() {
+        return isBot;
     }
 }
