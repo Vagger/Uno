@@ -20,6 +20,10 @@ class Player {
         return hand.stream().anyMatch(card -> card.isPlayableOn(topCard, currentColor));
     }
 
+    public int cardCount() {
+        return hand.size();
+    }
+
     public Card playCard(Card topCard, Color currentColor, Scanner scanner) {
         System.out.println("Your hand: " + hand);
         System.out.println("Top card: " + topCard);

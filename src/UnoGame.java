@@ -10,11 +10,11 @@ public class UnoGame {
     private boolean clockwiseOrder = true;
     private Color currentColor;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         new UnoGame().start();
     }
 
-    public void start() {
+    public void start() throws InterruptedException {
         initializeDeck();
         Collections.shuffle((List<?>) deck);
         int numPlayers = 3;
@@ -35,6 +35,8 @@ public class UnoGame {
 
         boolean gameOver = false;
         while (!gameOver) {
+            displayCardCountPerPlayer();
+
             if (deck.isEmpty()) {
                 reshuffleDiscard();
             }
@@ -93,6 +95,7 @@ public class UnoGame {
             }
 
             nextPlayer();
+            Thread.sleep(1000);
         }
     }
 
@@ -153,5 +156,16 @@ public class UnoGame {
         Collections.shuffle(discard);
         deck.addAll(discard);
         discard.clear();
+    }
+
+    private void displayCardCountPerPlayer() {
+        System.out.println("Number of cards: ");
+        players.forEach(player -> {
+            System.out.print(player.getName() + ": " + player.cardCount() + " cards. ");
+            if (player.cardCount() == 1) {
+                System.out.print(player.getName() + " is about to win!");
+            }
+            System.out.println();
+        });
     }
 }
