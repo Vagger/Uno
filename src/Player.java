@@ -16,16 +16,16 @@ class Player {
         }
     }
 
-    public boolean hasPlayableCard(Card topCard) {
-        return hand.stream().anyMatch(card -> card.isPlayableOn(topCard));
+    public boolean hasPlayableCard(Card topCard, Color currentColor) {
+        return hand.stream().anyMatch(card -> card.isPlayableOn(topCard, currentColor));
     }
 
-    public Card playCard(Card topCard, Scanner scanner) {
-        System.out.println(name + "'s turn. Your hand: " + hand);
+    public Card playCard(Card topCard, Color currentColor, Scanner scanner) {
+        System.out.println("Your hand: " + hand);
         System.out.println("Top card: " + topCard);
         List<Card> playableCards = new ArrayList<>();
         for (Card card : hand) {
-            if (card.isPlayableOn(topCard)) {
+            if (card.isPlayableOn(topCard, currentColor)) {
                 playableCards.add(card);
             }
         }
@@ -42,11 +42,10 @@ class Player {
         }
     }
 
-    public Card playRandomCard(Card topCard) {
-        System.out.println(name + "'s turn.");
+    public Card playRandomCard(Card topCard, Color currentColor) {
         List<Card> playableCards = new ArrayList<>();
         for (Card card : hand) {
-            if (card.isPlayableOn(topCard)) {
+            if (card.isPlayableOn(topCard, currentColor)) {
                 playableCards.add(card);
             }
         }
@@ -55,12 +54,39 @@ class Player {
             return null;
         } else {
             System.out.println("Playable cards: " + playableCards);
-            System.out.print("Choose a card to play (index): ");
             Random rand = new Random();
             Card selected = playableCards.get(rand.nextInt(playableCards.size()));
             hand.remove(selected);
             return selected;
         }
+    }
+
+    public Color changeColor(Scanner scanner) {
+        System.out.println("Choose a color: ");
+        System.out.println("1: Red");
+        System.out.println("2: Yellow");
+        System.out.println("3: Blue");
+        System.out.println("4: Green");
+        int choice = scanner.nextInt();
+        return switch (choice) {
+            case 1 -> Color.RED;
+            case 2 -> Color.YELLOW;
+            case 3 -> Color.BLUE;
+            case 4 -> Color.GREEN;
+            default -> changeColor(scanner);
+        };
+    }
+
+    public Color changeRandomColor() {
+        Random rand = new Random();
+        int choice = rand.nextInt(5);
+        return switch (choice) {
+            case 1 -> Color.RED;
+            case 2 -> Color.YELLOW;
+            case 3 -> Color.BLUE;
+            case 4 -> Color.GREEN;
+            default -> changeRandomColor();
+        };
     }
 
     public boolean hasNoCards() {

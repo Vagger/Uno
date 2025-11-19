@@ -8,6 +8,7 @@ public class UnoGame {
     private final List<Player> players = new ArrayList<>();
     private int currentPlayerIndex = 0;
     private boolean clockwiseOrder = true;
+    private Color currentColor;
 
     public static void main(String[] args) {
         new UnoGame().start();
@@ -38,14 +39,14 @@ public class UnoGame {
                 reshuffleDiscard();
             }
             Player currentPlayer = players.get(currentPlayerIndex);
-            System.out.println("\n" + currentPlayer.getName() + "'s turn.");
-            System.out.println("Current card on table: " + currentCard);
+            System.out.println("\n >> " + currentPlayer.getName() + "'s turn.");
+            System.out.println(">>>>> Current card on table: " + currentCard);
 
             if (currentCard.isPlusTwo()) {
                 currentPlayer.drawCard(deck);
                 currentPlayer.drawCard(deck);
                 currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
-                continue;
+                nextPlayer();
             }
             if (currentCard.isPlusFour()) {
                 currentPlayer.drawCard(deck);
@@ -53,28 +54,34 @@ public class UnoGame {
                 currentPlayer.drawCard(deck);
                 currentPlayer.drawCard(deck);
                 currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
-                continue;
+                nextPlayer();
             }
             if (currentCard.isSkip()) {
                 nextPlayer();
-                continue;
             }
             if (currentCard.isReverse()) {
                 clockwiseOrder = !clockwiseOrder;
-                continue;
             }
 
-            if (currentPlayer.hasPlayableCard(currentCard)) {
+            if (currentPlayer.hasPlayableCard(currentCard, currentColor)) {
                 Card playedCard;
                 if (!currentPlayer.isBot()) {
-                    playedCard = currentPlayer.playCard(currentCard, scanner);
+                    playedCard = currentPlayer.playCard(currentCard, currentColor, scanner);
+                    if (playedCard.isWild()) {
+                        currentColor = currentPlayer.changeColor(scanner);
+                    } else {
+                        currentColor = playedCard.getColor();
+                    }
                 } else {
-                    playedCard = currentPlayer.playRandomCard(currentCard);
+                    playedCard = currentPlayer.playRandomCard(currentCard, currentColor);
+                    if (playedCard.isWild()) {
+                        currentColor = currentPlayer.changeRandomColor();
+                    } else {
+                        currentColor = playedCard.getColor();
+                    }
                 }
-                if (playedCard != null) {
-                    discard.add(currentCard);
-                    currentCard = playedCard;
-                }
+                discard.add(currentCard);
+                currentCard = playedCard;
             } else {
                 System.out.println("No playable card, drawing a card...");
                 currentPlayer.drawCard(deck);
@@ -114,8 +121,8 @@ public class UnoGame {
         List<Card> tempDeck = new ArrayList<>();
 
         // Initialize numbered cards (0-9, two of each except 0)
-        for (Card.Color color : Card.Color.values()) {
-            if (color != Card.Color.WILD) {
+        for (Color color : Color.values()) {
+            if (color != Color.WILD) {
                 // Add one zero
                 tempDeck.add(new CardBuilder().setColor(color).setType(Card.Type.NUMBER).setNumber(0).createCard());
                 // Add two copies of 1-9
@@ -135,8 +142,8 @@ public class UnoGame {
 
         // Add Wild and Wild Draw Four cards
         for (int i = 0; i < 4; i++) {
-            tempDeck.add(new CardBuilder().setColor(Card.Color.WILD).setType(Card.Type.WILD).createCard());
-            tempDeck.add(new CardBuilder().setColor(Card.Color.WILD).setType(Card.Type.WILD_DRAW_FOUR).createCard());
+            tempDeck.add(new CardBuilder().setColor(Color.WILD).setType(Card.Type.COLOR_CHANGE).createCard());
+            tempDeck.add(new CardBuilder().setColor(Color.WILD).setType(Card.Type.DRAW_FOUR).createCard());
         }
 
         Collections.shuffle(tempDeck);

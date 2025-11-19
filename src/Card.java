@@ -2,8 +2,7 @@ import java.util.*;
 
 public class Card {
 
-    enum Color { RED, YELLOW, GREEN, BLUE, WILD }
-    enum Type { NUMBER, SKIP, REVERSE, DRAW_TWO, WILD, WILD_DRAW_FOUR }
+    enum Type { NUMBER, SKIP, REVERSE, DRAW_TWO, COLOR_CHANGE, DRAW_FOUR }
 
     private final Color color;
     private final Type type;
@@ -15,18 +14,18 @@ public class Card {
         this.number = number;
     }
 
-    public Card(Color color, Type type) {
-        this(color, type, -1);
-    }
-
-    public boolean isPlayableOn(Card topCard) {
-        if (this.color == Color.WILD || this.type == Type.WILD || this.type == Type.WILD_DRAW_FOUR) {
+    public boolean isPlayableOn(Card topCard, Color currentColor) {
+        if (this.color == Color.WILD || this.type == Type.COLOR_CHANGE || this.type == Type.DRAW_FOUR) {
             return true;
         }
         if (this.type == Type.DRAW_TWO || this.type == Type.SKIP || this.type == Type.REVERSE) {
-            return this.color == topCard.color;
+            return this.color == currentColor;
         }
-        return this.color == topCard.color || this.number == topCard.number;
+        return this.color == currentColor || this.number == topCard.number;
+    }
+
+    public Color getColor() {
+        return this.color;
     }
 
     public Type getType() {
@@ -38,7 +37,7 @@ public class Card {
     }
 
     public boolean isPlusFour() {
-        return this.type == Type.WILD_DRAW_FOUR;
+        return this.type == Type.DRAW_FOUR;
     }
 
     public boolean isSkip() {
@@ -47,6 +46,10 @@ public class Card {
 
     public boolean isReverse() {
         return this.type == Type.REVERSE;
+    }
+
+    public boolean isWild() {
+        return this.color == Color.WILD;
     }
 
     @Override

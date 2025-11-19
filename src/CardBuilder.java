@@ -1,9 +1,9 @@
 public class CardBuilder {
-    private Card.Color color;
+    private Color color;
     private Card.Type type;
     private int number = -1;
 
-    public CardBuilder setColor(Card.Color color) {
+    public CardBuilder setColor(Color color) {
         this.color = color;
         return this;
     }
