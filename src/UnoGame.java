@@ -42,10 +42,11 @@ public class UnoGame {
             System.out.println("\n >> " + currentPlayer.getName() + "'s turn.");
             System.out.println(">>>>> Current card on table: " + currentCard);
 
+            // TODO test if skip and draw two/four work correctly
+
             if (currentCard.isPlusTwo()) {
                 currentPlayer.drawCard(deck);
                 currentPlayer.drawCard(deck);
-                currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
                 nextPlayer();
             }
             if (currentCard.isPlusFour()) {
@@ -53,7 +54,6 @@ public class UnoGame {
                 currentPlayer.drawCard(deck);
                 currentPlayer.drawCard(deck);
                 currentPlayer.drawCard(deck);
-                currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
                 nextPlayer();
             }
             if (currentCard.isSkip()) {
@@ -93,7 +93,6 @@ public class UnoGame {
             }
 
             nextPlayer();
-            currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
         }
     }
 
